@@ -20,10 +20,10 @@ No confiar tu paquete de datos a un programa cualquiera es completamente compren
 - **No se comunica con ninguna API de terceros de dudosa reputación**. Los únicos dominios con los que podría comunicarse son `discord.com`, `cdn.discordapp.com`, `raw.githubusercontent.com` (para buscar actualizaciones, que puedes desactivar) y `versionhistory.googleapis.com` (para obtener la última versión de Chrome para los encabezados de selfbot).
 
 ## Capturas de pantalla
-![image](https://ibb.co/Xx3MnQbJ)
 
-![image](https://ibb.co/BHdXvD7c)
+https://ibb.co/Xx3MnQbJ
 
+https://ibb.co/BHdXvD7c
 ## Benchmark
 Estos se realizaron en mi máquina:tm: por lo que podrían no ser precisos
 
