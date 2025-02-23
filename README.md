@@ -1,50 +1,38 @@
-# Data Package Tool
-A tool focused on browsing the actual contents of a Discord data package.
+# Herramienta de paquete de datos
+Una herramienta enfocada en explorar el contenido real de un paquete de datos de Discord.
 
-Note: This is my first C# app, sorry for bad code or development mistakes
+Nota: Esta es mi primera aplicación en C#, lo siento por el código incorrecto o los errores de desarrollo
 
-[Download the latest release](https://github.com/aamiaa/Data-Package-Tool/releases)
+## Características
+- Busca tus mensajes
+- Salta a los mensajes en tu cliente
+- Elimina mensajes en masa*
+- Reabre los mensajes directos perdidos*
+- Explora todas las imágenes que has enviado
+- Ve todos los servidores a los que te has unido, junto con las invitaciones que has usado
+- Ve todos los mensajes directos en los que has hablado
 
-## Features
-- Search your messages
-- Jump to messages in your client
-- Mass delete messages*
-- Reopen lost DMs*
-- Browse all images you've sent
-- View all servers you've joined, along with invites you've used
-- View all DMs you've talked in
+\* Requiere el token de tu cuenta. Ten en cuenta que esto se incluye en el uso de bots propios, lo que va en contra de las [Directrices de la comunidad](https://discord.com/guidelines#:~:text=Do%20not%20use%20self%2Dbots%20or%20user%2Dbots) de Discord y podría hacer que tu cuenta sea baneada.
 
-\* Requires your account token. Note that this falls under selfbotting, which is against Discord's [Community Guidelines](https://discord.com/guidelines#:~:text=Do%20not%20use%20self%2Dbots%20or%20user%2Dbots) and might get your account banned. 
+## Seguridad de tus datos
+No confiar tu paquete de datos a un programa cualquiera es completamente comprensible. Por este motivo, me aseguré de lo siguiente para que sea lo más cómodo posible usar esta herramienta:
+- **Funciona completamente sin conexión**. Puedes desconectar Internet o ejecutarlo en una máquina virtual aislada y seguirá funcionando igual, menos las funciones que requieren conexión a Internet (por ejemplo, ver imágenes, volver a abrir mensajes directos).
+- **No se comunica con ninguna API de terceros de dudosa reputación**. Los únicos dominios con los que podría comunicarse son `discord.com`, `cdn.discordapp.com`, `raw.githubusercontent.com` (para buscar actualizaciones, que puedes desactivar) y `versionhistory.googleapis.com` (para obtener la última versión de Chrome para los encabezados de selfbot).
 
-## Usage Guide
-You can find various guides and examples under the wiki tab:
-- [Getting your package](https://github.com/aamiaa/Data-Package-Tool/wiki/Getting-your-package)
-- [Reopening a lost DM](https://github.com/aamiaa/Data-Package-Tool/wiki/Reopening-a-lost-DM)
-- [Searching in a specific server/channel/dm](https://github.com/aamiaa/Data-Package-Tool/wiki/Searching-in-a-specific-server-channel-dm)
+## Capturas de pantalla
+![image](https://ibb.co/Xx3MnQbJ)
 
-## Your Data Safety
-Not trusting a random program with your data package is completely understandable. For this reason, I've ensured the following to make it as comfortable as possible to use this tool:
-- **It works fully offline**. You can unplug your internet or run it in an isolated vm, and it will still work the same, minus the features which require internet connection (e.g. viewing images, reopening dms).
-- **It doesn't contact any unreputable 3rd party apis**. The only domains it might contact are `discord.com`, `cdn.discordapp.com`, `raw.githubusercontent.com` (to check for updates, which you can disable), and `versionhistory.googleapis.com` (to get latest Chrome version for selfbot headers).
-- **It's built directly from the source by GitHub Actions**. This ensures that the .exe you're downloading only contains the code that's in this repo. You can verify that a release's file hasn't been swapped/modified by downloading the same version from [GitHub Actions](https://github.com/aamiaa/Data-Package-Tool/actions/workflows/release.yml) artifacts, and comparing both .exe files.
-
-## Screenshots
-![image](https://i.imgur.com/kPnrtgs.png)
-
-![image](https://i.imgur.com/glSJuQa.png)
-
-![image](https://i.imgur.com/odXKiNr.png)
-
+![image](https://ibb.co/BHdXvD7c)
 
 ## Benchmark
-These were done on my machine:tm: so they might not be accurate
+Estos se realizaron en mi máquina:tm: por lo que podrían no ser precisos
 
-| # of messages | Load time  | RAM usage |
+| Número de mensajes | Tiempo de carga | Uso de RAM |
 |---------------|------------|-----------|
-| 1.2mil        | 21s        | 412mb     |
-| 1mil          | 18s        | 403mb     |
-| 941k          | 16s        | 346mb     |
-| 803k          | 14s        | 318mb     |
-| 641k          | 11s        | 250mb     |
-| 243k          | 5s         | 114mb     |
-| 47k           | 2s         | 50mb      |
+| 1,2 mil | 21 s | 412 mb |
+| 1 mil | 18 s | 403 mb |
+| 941 k | 16 s | 346 mb |
+| 803 k | 14 s | 318 mb |
+| 641 k | 11 s | 250 mb |
+| 243 k | 5 s | 114 mb |
+| 47 k | 2 s | 50 mb |
