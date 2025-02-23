@@ -1,0 +1,303 @@
+﻿using Data_Package_Tool.Classes;
+using Data_Package_Tool.Classes.Parsing;
+using Data_Package_Tool.Helpers;
+using Microsoft.VisualBasic.ApplicationServices;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using static Data_Package_Tool.Forms.DmsListWPF;
+
+namespace Data_Package_Tool.Forms
+{
+    /// <summary>
+    /// Interaction logic for DmWPF.xaml
+    /// </summary>
+    public partial class DmWPF : UserControl
+    {
+        public string UserId
+        {
+            get { return (string)GetValue(UserIdProperty); }
+            set { SetValue(UserIdProperty, value); }
+        }
+
+        public static readonly DependencyProperty UserIdProperty =
+            DependencyProperty.Register("UserId", typeof(string), typeof(DmWPF));
+
+        public string ChannelId
+        {
+            get { return (string)GetValue(ChannelIdProperty); }
+            set { SetValue(ChannelIdProperty, value); }
+        }
+
+        public static readonly DependencyProperty ChannelIdProperty =
+            DependencyProperty.Register("ChannelId", typeof(string), typeof(DmWPF));
+
+        public string Username
+        {
+            get { return (string)GetValue(UsernameProperty); }
+            set { SetValue(UsernameProperty, value); }
+        }
+
+        public static readonly DependencyProperty UsernameProperty =
+            DependencyProperty.Register("Username", typeof(string), typeof(DmWPF));
+
+        public BitmapImage Avatar
+        {
+            get { return (BitmapImage)GetValue(AvatarProperty); }
+            set { SetValue(AvatarProperty, value); }
+        }
+
+        public static readonly DependencyProperty AvatarProperty =
+            DependencyProperty.Register("Avatar", typeof(BitmapImage), typeof(DmWPF));
+
+        // This is a string because WPF doesn't localize date format properly without a ton of gymnastics
+        public string Date
+        {
+            get { return (string)GetValue(DateProperty); }
+            set { SetValue(DateProperty, value); }
+        }
+
+        public static readonly DependencyProperty DateProperty =
+            DependencyProperty.Register("Date", typeof(string), typeof(DmWPF));
+
+        public int MessagesCount
+        {
+            get { return (int)GetValue(MessagesCountProperty); }
+            set { SetValue(MessagesCountProperty, value); }
+        }
+
+        public static readonly DependencyProperty MessagesCountProperty =
+            DependencyProperty.Register("MessagesCount", typeof(int), typeof(DmWPF));
+
+        public string Note
+        {
+            get { return (string)GetValue(NoteProperty); }
+            set { SetValue(NoteProperty, value); }
+        }
+
+        public static readonly DependencyProperty NoteProperty =
+            DependencyProperty.Register("Note", typeof(string), typeof(DmWPF));
+
+        public bool CanFetch
+        {
+            get { return (bool)GetValue(CanFetchProperty); }
+            set { SetValue(CanFetchProperty, value); }
+        }
+
+        public static readonly DependencyProperty CanFetchProperty =
+            DependencyProperty.Register("CanFetch", typeof(bool), typeof(DmWPF));
+
+        public bool UnknownId
+        {
+            get { return (bool)GetValue(UnknownIdProperty); }
+            set { SetValue(UnknownIdProperty, value); }
+        }
+
+        public static readonly DependencyProperty UnknownIdProperty =
+            DependencyProperty.Register("UnknownId", typeof(bool), typeof(DmWPF));
+
+
+
+        public DmWPF()
+        {
+            InitializeComponent();
+        }
+
+        private async Task<DUser> FetchUserFromChannel(string channelId)
+        {
+            if (Discord.UserToken == null)
+            {
+                Util.MsgBoxErr(Consts.MissingTokenError);
+                return null;
+            }
+            if (!Discord.ValidateToken(Discord.UserToken, Main.DataPackage.User.Id))
+            {
+                Util.MsgBoxErr(Consts.InvalidTokenError);
+                return null;
+            }
+
+            await DHeaders.Init();
+
+            var res = await DRequest.RequestAsync(HttpMethod.Get, $"https://discord.com/api/v9/channels/{channelId}", new Dictionary<string, string>
+            {
+                {"Authorization", Discord.UserToken}
+            });
+
+            if (res.response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                DUser recipient = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(res.body).recipients[0].ToObject<DUser>();
+                return recipient;
+            }
+            else
+            {
+                Util.MsgBoxErr($"Status code {res.response.StatusCode} - {res.body}");
+                return null;
+            }
+        }
+
+        private async Task<DUser> FetchUserFromLookup(string userId)
+        {
+            if (Discord.BotToken == null)
+            {
+                Util.MsgBoxErr(Consts.MissingBotTokenError);
+                return null;
+            }
+            if (!Discord.ValidateToken(Discord.BotToken))
+            {
+                Util.MsgBoxErr(Consts.InvalidBotTokenError);
+                return null;
+            }
+            if (Discord.ValidateToken(Discord.BotToken, Main.DataPackage.User.Id))
+            {
+                Util.MsgBoxErr(Consts.WrongTokenType);
+                return null;
+            }
+
+            var res = await DRequest.RequestAsync(HttpMethod.Get, $"https://discord.com/api/v9/users/{userId}", new Dictionary<string, string>
+            {
+                {"Authorization", $"Bot {Discord.BotToken}"}
+            }, null, false);
+
+            if (res.response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                DUser recipient = Newtonsoft.Json.JsonConvert.DeserializeObject<DUser>(res.body);
+                return recipient;
+            } else
+            {
+                Util.MsgBoxErr($"Status code {res.response.StatusCode} - {res.body}");
+                return null;
+            }
+        }
+
+        private async void fetchBtn_Click(object sender, RoutedEventArgs e)
+        {
+            DmsListEntry DataContext = this.DataContext as DmsListEntry;
+            DUser recipient;
+               
+            if(this.UnknownId)
+            {
+                recipient = await FetchUserFromChannel(this.ChannelId);
+            } else
+            {
+                recipient = await FetchUserFromLookup(this.UserId);
+            }
+
+            if (recipient != null)
+            {
+                DataContext.UserId = recipient.Id;
+                DataContext.Username = recipient.Tag;
+                if (recipient.AvatarHash != null)
+                {
+                    var avatar = new BitmapImage();
+                    avatar.BeginInit();
+                    avatar.UriSource = new Uri(recipient.AvatarURL);
+                    avatar.CacheOption = BitmapCacheOption.OnLoad;
+                    avatar.EndInit();
+
+                    DataContext.Avatar = avatar;
+                } else
+                {
+                    DataContext.Avatar = new DUser() { Id = recipient.Id, Discriminator = "0" }.GetDefaultAvatarBitmapImage();
+                }
+                DataContext.CanFetch = false;
+
+                // Now that we know the id, do what we couldn't do before
+                if(this.UnknownId)
+                {
+                    // Check if there's a note
+                    DataContext.Note = Main.DataPackage.User.Notes.ContainsKey(recipient.Id) ? Main.DataPackage.User.Notes[recipient.Id] : "";
+
+                    // Perform the duplicate channels check
+                    var dmChannels = Main.DataPackage.Channels.Where(x => x.IsDM()).OrderByDescending(o => Int64.Parse(o.Id)).ToList();
+                    foreach (var dmChannel in dmChannels)
+                    {
+                        if (dmChannel.Id == this.ChannelId) continue; // Don't count self as a duplicate
+
+                        string recipientId = dmChannel.DMRecipientId;
+                        if(recipientId == this.UserId)
+                        {
+                            dmChannel.HasDuplicates = true;
+                            Main.DataPackage.ChannelsMap[this.ChannelId].HasDuplicates = true;
+                        }
+                    }
+
+                    // Save the user id in settings for reuse
+                    Properties.Settings.Default.ResolvedDeletedUsers.AddRange(new string[] {this.ChannelId, recipient.Id});
+                    Properties.Settings.Default.Save();
+
+                    DataContext.UnknownId = false;
+                }
+            }
+        }
+
+        private async void openDmBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if(this.UnknownId)
+            {
+                Util.MsgBoxErr(Consts.UnknownDeletedUserId);
+                return;
+            }
+
+            if (Main.DataPackage.ChannelsMap[this.ChannelId].HasDuplicates)
+            {
+                Util.MsgBoxWarn(Consts.DuplicateDMWarning);
+            }
+
+            if (await Discord.OpenDMFlowAsync(this.UserId, this.ChannelId))
+            {
+                Discord.LaunchDiscordProtocol($"channels/@me/{this.ChannelId}");
+            }
+        }
+
+        private void copyUserIdMi_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.UnknownId)
+            {
+                Util.MsgBoxErr(Consts.UnknownDeletedUserId);
+                return;
+            }
+
+            Clipboard.SetText(this.UserId);
+        }
+
+        private void copyChannelIdMi_Click(object sender, RoutedEventArgs e)
+        {
+            Clipboard.SetText(this.ChannelId);
+        }
+
+        private void copyNoteMi_Click(object sender, RoutedEventArgs e)
+        {
+            Clipboard.SetText(this.Note);
+        }
+
+        private void viewUserMi_Click(object sender, RoutedEventArgs e)
+        {
+            if (Main.DataPackage.ChannelsMap[this.ChannelId].HasDuplicates)
+            {
+                Util.MsgBoxWarn(Consts.DuplicateDMWarning);
+            }
+
+            try
+            {
+                Discord.LaunchDiscordProtocol($"users/{this.UserId}");
+            }
+            catch (Exception ex)
+            {
+                Util.MsgBoxErr(ex.Message);
+            }
+        }
+    }
+}
