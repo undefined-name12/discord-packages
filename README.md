@@ -21,9 +21,9 @@ No confiar tu paquete de datos a un programa cualquiera es completamente compren
 
 ## Capturas de pantalla
 
-https://ibb.co/Xx3MnQbJ
+[Imagen](https://i.ibb.co/9mzFBXfc/Captura-de-pantalla-2025-02-23-145308.png)
 
-https://ibb.co/BHdXvD7c
+[Imagen](https://i.ibb.co/r2cNBjmy/Captura-de-pantalla-2025-02-23-145302.png)
 ## Benchmark
 Estos se realizaron en mi máquina:tm: por lo que podrían no ser precisos
 
