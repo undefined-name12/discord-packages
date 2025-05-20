@@ -25,7 +25,6 @@ namespace Data_Package_Tool.Helpers
             return MessageBox.Show(msg, title, btns, MessageBoxIcon.Error);
         }
 
-        // https://stackoverflow.com/a/14488941
         static readonly string[] SizeSuffixes = { "bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
         public static string SizeSuffix(Int64 value, int decimalPlaces = 1)
         {
