@@ -25,7 +25,7 @@ namespace Data_Package_Tool
         {
             using var client = new HttpClient();
             client.DefaultRequestHeaders.CacheControl = CacheControlHeaderValue.Parse("no-cache");
-            string version = await client.GetStringAsync("https://raw.githubusercontent.com/aamiaa/Data-Package-Tool/main/version.txt");
+            string version = await client.GetStringAsync("https://raw.githubusercontent.com/undefined-name12/discord-packages/main/version.txt");
             if(version != Application.ProductVersion)
             {
                 return true;
