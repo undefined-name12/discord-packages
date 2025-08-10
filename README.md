@@ -19,11 +19,12 @@ No confiar tu paquete de datos a un programa cualquiera es completamente compren
 - **Funciona completamente sin conexión**. Puedes desconectar Internet o ejecutarlo en una máquina virtual aislada y seguirá funcionando igual, menos las funciones que requieren conexión a Internet (por ejemplo, ver imágenes, volver a abrir mensajes directos).
 - **No se comunica con ninguna API de terceros de dudosa reputación**. Los únicos dominios con los que podría comunicarse son `discord.com`, `cdn.discordapp.com`, `raw.githubusercontent.com` (para buscar actualizaciones, que puedes desactivar) y `versionhistory.googleapis.com` (para obtener la última versión de Chrome para los encabezados de selfbot).
 
-## Capturas de pantalla
+<h2>Capturas de pantalla</h2>
 
-[Imagen](https://i.ibb.co/9mzFBXfc/Captura-de-pantalla-2025-02-23-145308.png)
+<img src="https://i.ibb.co/9mzFBXfc/Captura-de-pantalla-2025-02-23-145308.png" alt="Captura 1" style="max-width:100%; height:auto; display:block; margin-bottom:10px;">
 
-[Imagen](https://i.ibb.co/r2cNBjmy/Captura-de-pantalla-2025-02-23-145302.png)
+<img src="https://i.ibb.co/r2cNBjmy/Captura-de-pantalla-2025-02-23-145302.png" alt="Captura 2" style="max-width:100%; height:auto; display:block;">
+
 ## Benchmark
 Estos se realizaron en mi máquina:tm: por lo que podrían no ser precisos
 
